@@ -25,7 +25,7 @@ jobs:
     - name: 'Az CLI login'
       uses: azure/login@v1.4.0
       with:
-        client-id: ${{ secrets.AZURE_CLIENTID }}
+        client-id: ${{ secrets.AZURE_CLIENTID_PULL_REQUEST }}
         tenant-id: ${{ secrets.AZURE_TENANTID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTIONID }}
 
