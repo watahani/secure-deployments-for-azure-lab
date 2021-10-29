@@ -1,4 +1,4 @@
-name: Run Azure Login with OpenID Connect
+name: Run when PR open
 on: [pull_request]
 
 permissions:
