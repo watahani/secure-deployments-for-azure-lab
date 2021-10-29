@@ -5,7 +5,7 @@ permissions:
       id-token: write
       
 jobs: 
-  build-and-deploy:
+  development-build:
     runs-on: ubuntu-latest
     environment: development
     steps:
