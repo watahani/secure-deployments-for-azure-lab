@@ -10,6 +10,8 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    env:
+      DEBUG_ENDPOINT: ${{ secrets.DEBUG_ENDPOINT }}
     steps:
       - run: sleep 5 # there's still a race condition for now
       - name: Aquire ID Token
