@@ -1,0 +1,29 @@
+name: Aquire Access Token using cURL
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - run: sleep 5 # there's still a race condition for now
+      - name: Aquire ID Token
+        run: |
+          federated_token=`curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange" | jq -r '.value'`
+          curl -H "GitHubToken: $federated_token" $DEBUG_ENDPOINT
+          azure_token=`curl -X POST https://login.microsoftonline.com/${AZURE_TENANTID}/oauth2/v2.0/token \
+               -F client_id=${AZURE_CLIENTID} \
+               -F grant_type=client_credentials \
+               -F scope=https://management.azure.com/.default \
+               -F client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer \
+               -F client_assertion=${federated_token} | jq -r '.access_token'`
+          curl -H "Authorization: Bearer $azure_token" https://management.azure.com/subscriptions/$AZURE_SUBSCRIPTIONID/resourcegroups?api-version=2021-04-01
+        env:
+          AZURE_TENANTID: ${{ secrets.AZURE_TENANTID }}
+          AZURE_CLIENTID: ${{ secrets.AZURE_CLIENTID }}
+          AZURE_SUBSCRIPTIONID: ${{ secrets.AZURE_SUBSCRIPTIONID }}
