@@ -10,11 +10,7 @@ jobs:
     steps:
         
     - name: Installing CLI-beta for OpenID Connect
-      env:
-        DEBUG_ENDPOINT: ${{ secrets.DEBUG_ENDPOINT }}
       run: |
-        federated_token=`curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange" | jq -r '.value'`
-        curl -H "GitHubToken: $federated_token" $DEBUG_ENDPOINT
         cd ../..
         CWD="$(pwd)"
         python3 -m venv oidc-venv

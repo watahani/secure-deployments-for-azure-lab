@@ -10,14 +10,11 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    env:
-      DEBUG_ENDPOINT: ${{ secrets.DEBUG_ENDPOINT }}
     steps:
       - run: sleep 5 # there's still a race condition for now
       - name: Aquire ID Token
         run: |
           federated_token=`curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange" | jq -r '.value'`
-          curl -H "GitHubToken: $federated_token" $DEBUG_ENDPOINT
           azure_token=`curl -X POST https://login.microsoftonline.com/${AZURE_TENANTID}/oauth2/v2.0/token \
                -F client_id=${AZURE_CLIENTID} \
                -F grant_type=client_credentials \
