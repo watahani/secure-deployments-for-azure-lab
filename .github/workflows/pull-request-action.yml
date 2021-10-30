@@ -5,7 +5,7 @@ permissions:
       id-token: write
       
 jobs: 
-  main-branch-build:
+  pull-request-build:
     runs-on: ubuntu-latest
     steps:
         
